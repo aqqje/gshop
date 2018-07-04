@@ -310,11 +310,23 @@
 
 <script>
   import HeaderTop from "../../components/HeaderTop/HeaderTop"
+  import Swiper from 'swiper'
+  import "swiper/dist/css/swiper.min.css"
     export default {
+      mounted(){
+        new Swiper('.swiper-container', {
+          loop: true, // 可循环
+          // 如果需要分页器
+          pagination: {
+            el: '.swiper-pagination',
+          },
+        })
+      },
         name: "Msite",
         components:{
           HeaderTop,
-        }
+        },
+
     }
 </script>
 
