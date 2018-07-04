@@ -1,10 +1,6 @@
 <template>
   <section class="profile">
-    <header class="header">
-      <a class="header_title">
-        <span class="header_title_text">我的</span>
-      </a>
-    </header>
+    <HeaderTop title="我的"></HeaderTop>
     <section class="profile-number">
       <a href="javascript:" class="profile-link">
         <div class="profile_image">
@@ -96,8 +92,12 @@
 </template>
 
 <script>
+  import HeaderTop from "../../components/HeaderTop/HeaderTop"
     export default {
-        name: "Profile"
+      name: "Profile",
+      components:{
+        HeaderTop,
+      }
     }
 </script>
 
