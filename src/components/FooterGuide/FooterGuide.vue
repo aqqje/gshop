@@ -1,15 +1,13 @@
 <template>
-  <div>
-    App
-  </div>
+    FooterGuide
 </template>
 
 <script>
     export default {
+        name: "FooterGuide"
     }
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
-  .app
-    color: red
+
 </style>

@@ -1,15 +1,13 @@
 <template>
-  <div>
-    App
-  </div>
+    Order
 </template>
 
 <script>
     export default {
+        name: "Order"
     }
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
-  .app
-    color: red
+
 </style>

@@ -1,15 +1,13 @@
 <template>
-  <div>
-    App
-  </div>
+    Msite
 </template>
 
 <script>
     export default {
+        name: "Msite"
     }
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
-  .app
-    color: red
+
 </style>
