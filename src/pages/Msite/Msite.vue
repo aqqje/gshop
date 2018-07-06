@@ -54,13 +54,6 @@
           // 发送异步请求获取商品分类信息
           this.$store.dispatch("getTypes")
 
-          new Swiper('.swiper-container', {
-            loop: true, // 可循环
-            // 如果需要分页器
-            pagination: {
-              el: '.swiper-pagination',
-            },
-          })
         },
         name: "Msite",
         components:{
@@ -90,7 +83,20 @@
             })
             return arr
           }
-        }
+        },
+        watch:{
+          types(value){
+            this.$nextTick(()=>{ // $nextTick 必须执行在数据更新之后，一旦界面更新，立即调用 | setTimeout 也可以使用
+              new Swiper('.swiper-container', {
+                loop: true, // 可循环
+                // 如果需要分页器
+                pagination: {
+                  el: '.swiper-pagination',
+                },
+              })
+            })
+          }
+        },
 
     }
 </script>
