@@ -53,6 +53,8 @@
 
           // 发送异步请求获取商品分类信息
           this.$store.dispatch("getTypes")
+          // 发送异步请求获取商店信息
+          this.$store.dispatch("getShops")
 
         },
         name: "Msite",
