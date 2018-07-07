@@ -11,7 +11,7 @@
     </HeaderTop>
     <!--首页导航-->
     <nav class="msite_nav">
-      <div class="swiper-container">
+      <div class="swiper-container" v-if="types.length">
         <div class="swiper-wrapper">
           <div class="swiper-slide" v-for="(types, index) in typesArr" :key="index">
             <a href="javascript:" class="link_to_food" v-for="(type, index) in types" :key="index">
@@ -25,7 +25,9 @@
         <!-- Add Pagination -->
         <div class="swiper-pagination"></div>
       </div>
+      <div v-else><img src="./images/back/msite_back.svg"></div>
     </nav>
+
     <!--首页附近商家-->
     <div class="msite_shop_list">
       <div class="shop_header">
@@ -106,6 +108,7 @@
 <style lang="stylus" rel="stylesheet/stylus">
   @import "../../common/stylus/mixins.styl"
   .msite  //首页
+    overflow hidden
     width 100%
     .msite_nav
       bottom-border-1px(#e4e4e4)
