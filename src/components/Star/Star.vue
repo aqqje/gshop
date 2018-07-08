@@ -1,6 +1,12 @@
 <template>
-  <div class="star" :class="'star'+star.size">
+  <div class="star" :class="'star-'+size">
+  <!--<div class="star star-24">-->
     <span class="star-item" v-for="(sc, index) in scoreClasses" :class="sc" :key="index"></span>
+    <!--<span class="star-item on"></span>-->
+    <!--<span class="star-item on"></span>-->
+    <!--<span class="star-item on"></span>-->
+    <!--<span class="star-item half"></span>-->
+    <!--<span class="star-item off"></span>-->
   </div>
 </template>
 
@@ -24,7 +30,7 @@
             scs.push(CLASS_ON)
           }
           // 向 scs 添加 0 / 1 个 CLASS_HALF
-          if((score*10 - scoreInteger*10) > 5 ){
+          if(score*10 - scoreInteger*10 >= 5 ){
             scs.push(CLASS_HALF)
           }
           // 向 scs 添加 n / 0 个 CLASS_OFF
