@@ -30,8 +30,9 @@
                 <input type="tel" maxlength="11" placeholder="手机/邮箱/用户名">
               </section>
               <section class="login_verification">
-                <input type="tel" maxlength="8" placeholder="密码">
-                <div class="switch_button off">
+                <input type="text" maxlength="8" placeholder="密码" v-if="showPwd" v-model="pwd">
+                <input type="password" maxlength="8" placeholder="密码" v-else  v-model="pwd">
+                <div class="switch_button off" >
                   <div class="switch_circle"></div>
                   <span class="switch_text">...</span>
                 </div>
@@ -59,7 +60,9 @@
         return{
           loginWay: true,  // true 短信登录（默认） false 密码登录
           computedTime: 0, // 倒计时
-          phone: '' // 手机号
+          phone: '', // 手机号
+          showPwd: false, // 显示密码(默认密码显示)
+          pwd: '' // 密码
         }
       },
       computed:{
