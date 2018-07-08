@@ -32,9 +32,9 @@
               <section class="login_verification">
                 <input type="text" maxlength="8" placeholder="密码" v-if="showPwd" v-model="pwd">
                 <input type="password" maxlength="8" placeholder="密码" v-else  v-model="pwd">
-                <div class="switch_button off" >
-                  <div class="switch_circle"></div>
-                  <span class="switch_text">...</span>
+                <div class="switch_button" :class="showPwd ? 'on' : 'off'" @click="showPwd=!showPwd">
+                  <div class="switch_circle" :class="{rigth: showPwd}"></div>
+                  <span class="switch_text">{{showPwd?"adc" : " "}}</span>
                 </div>
               </section>
               <section class="login_message">
@@ -189,6 +189,8 @@
                   background #fff
                   box-shadow 0 2px 4px 0 rgba(0,0,0,.1)
                   transition transform .3s
+                  &.rigth
+                    transform translateX(28px)
             .login_hint
               margin-top 12px
               color #999
