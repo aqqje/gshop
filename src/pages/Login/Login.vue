@@ -9,7 +9,7 @@
         </div>
       </div>
       <div class="login_content">
-        <form>
+        <form @submit.prevent="login">
           <div :class="{on: loginWay}">
             <section class="login_message">
               <input type="tel" maxlength="11" placeholder="手机号" v-model="phone">
@@ -17,7 +17,7 @@
                       @click.prevent="getCode">{{computedTime ? `已发送(${computedTime}s)` :  "获取验证码"}}</button>
             </section>
             <section class="login_verification">
-              <input type="tel" maxlength="8" placeholder="验证码">
+              <input type="tel" maxlength="8" placeholder="验证码" v-model="code">
             </section>
             <section class="login_hint">
               温馨提示：未注册硅谷外卖帐号的手机号，登录时将自动注册，且代表已同意
@@ -27,7 +27,7 @@
           <div :class="{on: !loginWay}">
             <section>
               <section class="login_message">
-                <input type="tel" maxlength="11" placeholder="手机/邮箱/用户名">
+                <input type="text" maxlength="11" placeholder="手机/邮箱/用户名" v-model="name">
               </section>
               <section class="login_verification">
                 <input type="text" maxlength="8" placeholder="密码" v-if="showPwd" v-model="pwd">
@@ -38,7 +38,7 @@
                 </div>
               </section>
               <section class="login_message">
-                <input type="text" maxlength="11" placeholder="验证码">
+                <input type="text" maxlength="11" placeholder="验证码" v-model="captcha">
                 <img class="get_verification" src="./images/captcha.svg" alt="captcha">
               </section>
             </section>
@@ -51,10 +51,12 @@
         <i class="iconfont icon-jiantou2"></i>
       </a>
     </div>
+    <AlertTip :alertText="alertText" v-show="showAlert" @closeTip="closeTip"></AlertTip>
   </section>
 </template>
 
 <script>
+  import AlertTip from "../../components/AlertTip/AlertTip"
     export default {
       data(){
         return{
@@ -62,7 +64,12 @@
           computedTime: 0, // 倒计时
           phone: '', // 手机号
           showPwd: false, // 显示密码(默认密码显示)
-          pwd: '' // 密码
+          pwd: '', // 密码
+          code: '', //  短信验证码
+          captcha: '', //  图片验证码
+          name: '', //  手机/邮箱/用户名
+          alertText: '', // 提示文本
+          showAlert: false // true显示提示文本  false 隐藏提示文本（默认）
         }
       },
       computed:{
@@ -71,6 +78,12 @@
         }
       },
       methods:{
+        // 显示提示文本方法
+        alertShow(alertText){
+          this.showAlert = true
+          this.alertText = alertText
+        },
+        // 异步获取短信验证码
         getCode(){
           if(!this.computedTime){
             // 启动倒计时
@@ -81,8 +94,45 @@
                 clearInterval(intervalId)
               }
             }, 1000)
+            //  发送短信验证码的ajax请求
           }
+        },
+        // 异步登录
+        login(){
+          const {alertShow} = this
+          // 前台表单验证
+          if(this.loginWay){
+            const {phone, rightPhone, code} = this
+            if(!this.rightPhone){// 短信登录
+              // 手机号不正确
+              alertShow("手机号不正确")
+            }else if(!/^\d{6}$/.test(code)){
+              // 验证必须是6位数字
+              alertShow("验证必须是6位数字")
+            }
+
+          }else{// 密码登录
+            const {name, captcha, pwd} = this
+            if(!this.name){
+              // 用户名必须指定
+              alertShow("用户名必须指定")
+            }else if(!this.pwd){
+              // 密码必须指定
+              alertShow("密码必须指定")
+            }else if(!this.captcha){
+              // 验证码必须指定
+              alertShow("验证码必须指定")
+            }
+          }
+        },
+        // 关闭提示文本方法
+        closeTip(){
+          this.showAlert = false
+          this.alertText = ""
         }
+      },
+      components:{
+        AlertTip
       }
     }
 </script>
