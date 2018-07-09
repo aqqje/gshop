@@ -57,6 +57,7 @@
 
 <script>
   import AlertTip from "../../components/AlertTip/AlertTip"
+  import {reqSendCode, reqPwdLogin, reqSmsCaptcha} from "../../api"
     export default {
       data(){
         return{
@@ -84,17 +85,28 @@
           this.alertText = alertText
         },
         // 异步获取短信验证码
-        getCode(){
+        async getCode(){
           if(!this.computedTime){
             // 启动倒计时
             this.computedTime = 30
-            const intervalId = setInterval(() => {
+            this.intervalId = setInterval(() => {
               this.computedTime--
               if(this.computedTime <= 0){
-                clearInterval(intervalId)
+                clearInterval(this.intervalId)
               }
             }, 1000)
             //  发送短信验证码的ajax请求
+            const result = await reqSendCode(this.phone)
+            if(result.code === 1){ //  短信发送失败
+              // 显示提示
+              this.alertShow(result.msg)
+              // 停止倒计时
+              if(this.computedTime){
+                this.computedTime = 0
+                clearInterval(this.intervalId)
+                this.intervalId = undefined
+              }
+            }
           }
         },
         // 异步登录
