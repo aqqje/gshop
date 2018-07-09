@@ -39,7 +39,7 @@
               </section>
               <section class="login_message">
                 <input type="text" maxlength="11" placeholder="验证码" v-model="captcha">
-                <img class="get_verification" src="http://localhost:4000/captcha" @click="getCaptcha" alt="captcha">
+                <img class="get_verification" src="http://localhost:4000/captcha" @click="getCaptcha" ref="captcha" alt="captcha">
               </section>
             </section>
           </div>
@@ -110,7 +110,8 @@
           }
         },
         // 异步登录
-        login(){
+        async login(){
+          let result
           const {alertShow} = this
           // 前台表单验证
           if(this.loginWay){
@@ -118,23 +119,53 @@
             if(!this.rightPhone){// 短信登录
               // 手机号不正确
               alertShow("手机号不正确")
+              return
             }else if(!/^\d{6}$/.test(code)){
               // 验证必须是6位数字
               alertShow("验证必须是6位数字")
+              return
             }
+            // 发送ajax请求短信登录
+            result = await reqSmsCaptcha(phone, code)
 
           }else{// 密码登录
             const {name, captcha, pwd} = this
             if(!this.name){
               // 用户名必须指定
               alertShow("用户名必须指定")
+              return
             }else if(!this.pwd){
               // 密码必须指定
               alertShow("密码必须指定")
+              return
             }else if(!this.captcha){
               // 验证码必须指定
               alertShow("验证码必须指定")
+              return
             }
+            // 发送ajax请求密码登录
+            result = await reqPwdLogin({name, pwd, captcha})
+          }
+
+          // 根据结果处理数据
+
+          // 停止倒计时
+          if(this.computedTime){
+            this.computedTime = 0
+            clearInterval(this.intervalId)
+            this.intervalId = undefined
+          }
+
+          if(result.code === 0){ //  请求成功
+            // 保存用户信息到 vuex 的 state 中
+            const user = result.data
+            // 跳转到个人信息界面
+            this.$router.replace("/profile")
+          }else{
+            //  显示错误信息
+            const msg = result.msg
+            this.alertShow(msg)
+            this.getCaptcha()
           }
         },
         // 关闭提示文本方法
@@ -143,9 +174,9 @@
           this.alertText = ""
         },
         // 获取一次图片验证码
-        getCaptcha(event){
+        getCaptcha(){
           // 每次点击src都不一样
-          event.target.src = "http://localhost:4000/captcha?time=" + Date.now()
+         this.$refs.captcha.src = "http://localhost:4000/captcha?time=" + Date.now()
         }
       },
       components:{
