@@ -39,7 +39,7 @@
               </section>
               <section class="login_message">
                 <input type="text" maxlength="11" placeholder="验证码" v-model="captcha">
-                <img class="get_verification" src="./images/captcha.svg" alt="captcha">
+                <img class="get_verification" src="http://localhost:4000/captcha" @click="getCaptcha" alt="captcha">
               </section>
             </section>
           </div>
@@ -129,6 +129,11 @@
         closeTip(){
           this.showAlert = false
           this.alertText = ""
+        },
+        // 获取一次图片验证码
+        getCaptcha(event){
+          // 每次点击src都不一样
+          event.target.src = "http://localhost:4000/captcha?time=" + Date.now()
         }
       },
       components:{
