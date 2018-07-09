@@ -21,6 +21,7 @@
 <style lang="stylus" rel="stylesheet/stylus">
   @import "../../common/stylus/mixins.styl"
   .order  //订单
+    overflow hidden
     width 100%
     .order_no_login
       padding-top 140px

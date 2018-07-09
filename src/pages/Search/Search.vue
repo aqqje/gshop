@@ -21,6 +21,7 @@
 <style lang="stylus" rel="stylesheet/stylus">
   @import "../../common/stylus/mixins.styl"
   .search  //搜索
+    overflow hidden
     width 100%
     .search_form
       clearFix()
