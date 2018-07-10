@@ -4,7 +4,8 @@
 import {
   RECEIVE_ADDRESS,
   RECEIVE_SHOPS,
-  RECEIVE_TYPES
+  RECEIVE_TYPES,
+  RECEIVE_USER_INFO
 } from "./Mutations-Types"
 import {
   reqFoodTypes,
@@ -40,5 +41,9 @@ export default {
       const shops = result.data
       commit(RECEIVE_SHOPS, {shops})
     }
+  },
+  // 同步接收登录用户信息
+  recordUserInfo({commit}, userInfo){
+    commit(RECEIVE_USER_INFO, {userInfo})
   }
 }

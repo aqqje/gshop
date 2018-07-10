@@ -148,9 +148,7 @@
           }
 
           // 根据结果处理数据
-
-          // 停止倒计时
-          if(this.computedTime){
+          if(this.computedTime){ // 停止倒计时
             this.computedTime = 0
             clearInterval(this.intervalId)
             this.intervalId = undefined
@@ -159,6 +157,7 @@
           if(result.code === 0){ //  请求成功
             // 保存用户信息到 vuex 的 state 中
             const user = result.data
+            this.$store.dispatch("recordUserInfo", user)
             // 跳转到个人信息界面
             this.$router.replace("/profile")
           }else{
