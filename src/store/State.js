@@ -8,4 +8,7 @@ export default {
   types: [], // 食品种类数组
   shops: [], // 商家列表数组
   userInfo: {}, // 用户信息
+  goods: [], // 商品列表
+  rating: [], // 商家评价列表
+  info: {}, // 商家信息
 }

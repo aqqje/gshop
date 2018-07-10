@@ -6,7 +6,10 @@ import {
   RECEIVE_SHOPS,
   RECEIVE_TYPES,
   RECEIVE_USER_INFO,
-  RESET_USER_INFO
+  RESET_USER_INFO,
+  RECEIVE_GOODS,
+  RECEIVE_RATING,
+  RECEIVE_INFO
 } from "./Mutations-Types"
 export default {
   [RECEIVE_ADDRESS](state,{address}){
@@ -23,5 +26,14 @@ export default {
   },
   [RESET_USER_INFO](state){
     state.userInfo = {}
-  }
+  },
+  [RECEIVE_INFO](state, {info}) {
+    state.info = info
+  },
+  [RECEIVE_RATING](state, {ratings}) {
+    state.ratings = ratings
+  },
+  [RECEIVE_GOODS](state, {goods}) {
+    state.goods = goods
+  },
 }

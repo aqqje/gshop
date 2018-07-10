@@ -3,6 +3,9 @@
 * */
 import {
   RECEIVE_ADDRESS,
+  RECEIVE_GOODS,
+  RECEIVE_INFO,
+  RECEIVE_RATING,
   RECEIVE_SHOPS,
   RECEIVE_TYPES,
   RECEIVE_USER_INFO,
@@ -14,7 +17,10 @@ import {
   reqAddress,
   reqShops,
   reqLogout,
-  reqUserInfo
+  reqUserInfo,
+  reqShopInfo,
+  reqShopRatings,
+  reqShopGoods
 } from "../api"
 export default {
   // 异步获取地址
@@ -65,4 +71,29 @@ export default {
       commit(RESET_USER_INFO)
     }
   }
+  ,
+  // 异步获取商家信息
+  async getShopInfo({commit}) {
+    const result = await reqShopInfo()
+    if(result.code===0) {
+      const info = result.data
+      commit(RECEIVE_INFO, {info})
+    }
+  },
+// 异步获取商家评价列表
+  async getShopRatings({commit}) {
+    const result = await reqShopRatings()
+    if(result.code===0) {
+      const ratings = result.data
+      commit(RECEIVE_RATINGS, {ratings})
+    }
+  },
+// 异步获取商家商品列表
+  async getShopGoods({commit}) {
+    const result = await reqShopGoods()
+    if(result.code===0) {
+      const goods = result.data
+      commit(RECEIVE_GOOD, {goods})
+    }
+  },
 }
