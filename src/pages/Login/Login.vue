@@ -58,135 +58,132 @@
 <script>
   import AlertTip from "../../components/AlertTip/AlertTip"
   import {reqSendCode, reqPwdLogin, reqSmsCaptcha} from "../../api"
-    export default {
-      data(){
-        return{
-          loginWay: true,  // true 短信登录（默认） false 密码登录
-          computedTime: 0, // 倒计时
-          phone: '', // 手机号
-          showPwd: false, // 显示密码(默认密码显示)
-          pwd: '', // 密码
-          code: '', //  短信验证码
-          captcha: '', //  图片验证码
-          name: '', //  手机/邮箱/用户名
-          alertText: '', // 提示文本
-          showAlert: false // true显示提示文本  false 隐藏提示文本（默认）
-        }
-      },
-      computed:{
-        rightPhone(){
-          return /^1\d{10}$/.test(this.phone)
-        }
-      },
-      methods:{
-        // 显示提示文本方法
-        alertShow(alertText){
-          this.showAlert = true
-          this.alertText = alertText
-        },
-        // 异步获取短信验证码
-        async getCode(){
-          if(!this.computedTime){
-            // 启动倒计时
-            this.computedTime = 30
-            this.intervalId = setInterval(() => {
-              this.computedTime--
-              if(this.computedTime <= 0){
-                clearInterval(this.intervalId)
-              }
-            }, 1000)
-            //  发送短信验证码的ajax请求
-            const result = await reqSendCode(this.phone)
-            if(result.code === 1){ //  短信发送失败
-              // 显示提示
-              this.alertShow(result.msg)
-              // 停止倒计时
-              if(this.computedTime){
-                this.computedTime = 0
-                clearInterval(this.intervalId)
-                this.intervalId = undefined
-              }
-            }
-          }
-        },
-        // 异步登录
-        async login(){
-          let result
-          const {alertShow} = this
-          // 前台表单验证
-          if(this.loginWay){
-            const {phone, rightPhone, code} = this
-            if(!this.rightPhone){// 短信登录
-              // 手机号不正确
-              alertShow("手机号不正确")
-              this.phone = ""
-              return
-            }else if(!/^\d{6}$/.test(code)){
-              // 验证必须是6位数字
-              alertShow("验证必须是6位数字")
-              this.code = ""
-              return
-            }
-            // 发送ajax请求短信登录
-            result = await reqSmsCaptcha(phone, code)
-
-          }else{// 密码登录
-            const {name, captcha, pwd} = this
-            if(!this.name){
-              // 用户名必须指定
-              alertShow("用户名必须指定")
-              this.name = ""
-              return
-            }else if(!this.pwd){
-              // 密码必须指定
-              alertShow("密码必须指定")
-              this.pwd = ""
-              return
-            }else if(!this.captcha){
-              // 验证码必须指定
-              alertShow("验证码必须指定")
-              this.captcha = ""
-              return
-            }
-            // 发送ajax请求密码登录
-            result = await reqPwdLogin({name, pwd, captcha})
-          }
-
-          // 根据结果处理数据
-          if(this.computedTime){ // 停止倒计时
-            this.computedTime = 0
-            clearInterval(this.intervalId)
-            this.intervalId = undefined
-          }
-
-          if(result.code === 0){ //  请求成功
-            // 保存用户信息到 vuex 的 state 中
-            const user = result.data
-            this.$store.dispatch("recordUserInfo", user)
-            // 跳转到个人信息界面
-            this.$router.replace("/profile")
-          }else{
-            //  显示错误信息
-            const msg = result.msg
-            this.alertShow(msg)
-            this.getCaptcha()
-          }
-        },
-        // 关闭提示文本方法
-        closeTip(){
-          this.showAlert = false
-          this.alertText = ""
-        },
-        // 获取一次图片验证码
-        getCaptcha(){
-          // 每次点击src都不一样
-         this.$refs.captcha.src = "http://localhost:4000/captcha?time=" + Date.now()
-        }
-      },
-      components:{
-        AlertTip
+  export default {
+    data(){
+      return{
+        loginWay: true,  // true 短信登录（默认） false 密码登录
+        computedTime: 0, // 倒计时
+        phone: '', // 手机号
+        showPwd: false, // 显示密码(默认密码显示)
+        pwd: '', // 密码
+        code: '', //  短信验证码
+        captcha: '', //  图片验证码
+        name: '', //  手机/邮箱/用户名
+        alertText: '', // 提示文本
+        showAlert: false // true显示提示文本  false 隐藏提示文本（默认）
       }
+    },
+    computed:{
+      rightPhone(){
+        return /^1\d{10}$/.test(this.phone)
+      }
+    },
+    methods:{
+      // 显示提示文本方法
+      alertShow(alertText){
+        this.showAlert = true
+        this.alertText = alertText
+      },
+      // 异步获取短信验证码
+      async getCode(){
+        if(!this.computedTime){
+          // 启动倒计时
+          this.computedTime = 30
+          this.intervalId = setInterval(() => {
+            this.computedTime--
+            if(this.computedTime <= 0){
+              clearInterval(this.intervalId)
+            }
+          }, 1000)
+          //  发送短信验证码的ajax请求
+          const result = await reqSendCode(this.phone)
+          if(result.code === 1){ //  短信发送失败
+            // 显示提示
+            this.alertShow(result.msg)
+            // 停止倒计时
+            if(this.computedTime){
+              this.computedTime = 0
+              clearInterval(this.intervalId)
+              this.intervalId = undefined
+            }
+          }
+        }
+      },
+      // 异步登录
+      async login(){
+        let result
+        const {alertShow} = this
+        // 前台表单验证
+        if(this.loginWay){
+          const {phone, rightPhone, code} = this
+          if(!this.rightPhone){// 短信登录
+            // 手机号不正确
+            alertShow("手机号不正确")
+            this.phone = ""
+            return
+          }else if(!/^\d{6}$/.test(code)){
+            // 验证必须是6位数字
+            alertShow("验证必须是6位数字")
+            this.code = ""
+            return
+          }
+          // 发送ajax请求短信登录
+          result = await reqSmsCaptcha(phone, code)
+        }else{// 密码登录
+          const {name, captcha, pwd} = this
+          if(!this.name){
+            // 用户名必须指定
+            alertShow("用户名必须指定")
+            this.name = ""
+            return
+          }else if(!this.pwd){
+            // 密码必须指定
+            alertShow("密码必须指定")
+            this.pwd = ""
+            return
+          }else if(!this.captcha){
+            // 验证码必须指定
+            alertShow("验证码必须指定")
+            this.captcha = ""
+            return
+          }
+          // 发送ajax请求密码登录
+          result = await reqPwdLogin({name, pwd, captcha})
+        }
+        // 根据结果处理数据
+        if(this.computedTime){ // 停止倒计时
+          this.computedTime = 0
+          clearInterval(this.intervalId)
+          this.intervalId = undefined
+        }
+        if(result.code === 0){ //  请求成功
+          // 保存用户信息到 vuex 的 state 中
+          const user = result.data
+          this.$store.dispatch("recordUserInfo", user)
+          // 跳转到个人信息界面
+          this.$router.replace("/profile")
+        }else{
+          //  显示错误信息
+          const msg = result.msg
+          this.alertShow(msg)
+          this.getCaptcha()
+        }
+      },
+      // 关闭提示文本方法
+      closeTip(){
+        this.showAlert = false
+        this.alertText = ""
+      },
+      // 获取一次图片验证码
+      getCaptcha(){
+        // 每次点击src都不一样
+        this.$refs.captcha.src = "http://localhost:4000/captcha?time=" + Date.now()
+      }
+    },
+    components:{
+      AlertTip
     }
+  }
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
@@ -328,3 +325,4 @@
           font-size 20px
           color #999
 </style>
+

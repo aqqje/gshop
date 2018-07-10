@@ -51,64 +51,60 @@
   import Swiper from 'swiper'
   import "swiper/dist/css/swiper.min.css"
   import ShopList from '../../components/ShopList/ShopList'
-    export default {
-        data() {
-          return {
-            baseImgUrl: 'https://fuss10.elemecdn.com'
+  export default {
+    data() {
+      return {
+        baseImgUrl: 'https://fuss10.elemecdn.com'
+      }
+    },
+    mounted(){
+      // 发送异步请求获取商品分类信息
+      this.$store.dispatch("getTypes")
+      // 发送异步请求获取商店信息
+      this.$store.dispatch("getShops")
+    },
+    name: "Msite",
+    components:{
+      HeaderTop,
+      ShopList,
+    },
+    computed:{
+      ...mapState(["address", "types", "userInfo"]),
+      // 通过 types 一维数组，计算出一个 typesArr 二维数组
+      typesArr(){
+        const {types} = this
+        // 准备一个二维数组
+        const arr = []
+        // 准备一个小数组（长度为8）
+        let minArr = []
+        types.forEach(t => {
+          // 判断 minArr 长度超8 minArr 重新赋值
+          if(minArr.length === 8){
+            minArr = []
           }
-        },
-        mounted(){
-
-          // 发送异步请求获取商品分类信息
-          this.$store.dispatch("getTypes")
-          // 发送异步请求获取商店信息
-          this.$store.dispatch("getShops")
-
-        },
-        name: "Msite",
-        components:{
-          HeaderTop,
-          ShopList,
-        },
-        computed:{
-          ...mapState(["address", "types", "userInfo"]),
-
-          // 通过 types 一维数组，计算出一个 typesArr 二维数组
-          typesArr(){
-            const {types} = this
-            // 准备一个二维数组
-            const arr = []
-            // 准备一个小数组（长度为8）
-            let minArr = []
-            types.forEach(t => {
-              // 判断 minArr 长度超8 minArr 重新赋值
-              if(minArr.length === 8){
-                minArr = []
-              }
-              // 将小数组放入二维数组中
-              if(minArr.length === 0){
-                arr.push(minArr)
-              }
-              minArr.push(t)
-            })
-            return arr
+          // 将小数组放入二维数组中
+          if(minArr.length === 0){
+            arr.push(minArr)
           }
-        },
-        watch:{
-          types(value){
-            this.$nextTick(()=>{ // $nextTick 必须执行在数据更新之后，一旦界面更新，立即调用 | setTimeout 也可以使用
-              new Swiper('.swiper-container', {
-                loop: true, // 可循环
-                // 如果需要分页器
-                pagination: {
-                  el: '.swiper-pagination',
-                },
-              })
-            })
-          }
-        },
-
-    }
+          minArr.push(t)
+        })
+        return arr
+      }
+    },
+    watch:{
+      types(value){
+        this.$nextTick(()=>{ // $nextTick 必须执行在数据更新之后，一旦界面更新，立即调用 | setTimeout 也可以使用
+          new Swiper('.swiper-container', {
+            loop: true, // 可循环
+            // 如果需要分页器
+            pagination: {
+              el: '.swiper-pagination',
+            },
+          })
+        })
+      }
+    },
+  }
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
