@@ -88,6 +88,9 @@
         </div>
       </a>
     </section>
+    <section class="profile_my_order border-1px">
+      <mt-button type="danger" style="width: 100%">退出登录</mt-button>
+    </section>
   </section>
 </template>
 
