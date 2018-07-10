@@ -119,10 +119,12 @@
             if(!this.rightPhone){// 短信登录
               // 手机号不正确
               alertShow("手机号不正确")
+              this.phone = ""
               return
             }else if(!/^\d{6}$/.test(code)){
               // 验证必须是6位数字
               alertShow("验证必须是6位数字")
+              this.code = ""
               return
             }
             // 发送ajax请求短信登录
@@ -133,14 +135,17 @@
             if(!this.name){
               // 用户名必须指定
               alertShow("用户名必须指定")
+              this.name = ""
               return
             }else if(!this.pwd){
               // 密码必须指定
               alertShow("密码必须指定")
+              this.pwd = ""
               return
             }else if(!this.captcha){
               // 验证码必须指定
               alertShow("验证码必须指定")
+              this.captcha = ""
               return
             }
             // 发送ajax请求密码登录
