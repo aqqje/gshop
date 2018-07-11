@@ -62,7 +62,7 @@
             <p>约 {{info.deliveryTime}} 分钟</p>
           </li>
           <li>
-            <h3>{{deliveryPrice}} 元</h3>
+            <h3>{{info.deliveryPrice}} 元</h3>
             <p>配送费用</p>
           </li>
           <li>
@@ -86,7 +86,7 @@
       <div class="activity-sheet-content">
         <h2 class="activity-sheet-title">优惠活动</h2>
         <ul class="list" v-if="info.supports">
-          <li class="activity-item" :class="supportClass[support.type]" v-for="(support, index) in info.supports" :key="index" :support="support">
+          <li class="activity-item" :class="supportClass[support.type]" v-for="(support, index) in info.supports" :key="index">
               <span class="content-tag">
                 <span class="mini-tag">{{support.name}}</span>
               </span>

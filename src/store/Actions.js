@@ -93,7 +93,7 @@ export default {
     const result = await reqShopGoods()
     if(result.code===0) {
       const goods = result.data
-      commit(RECEIVE_GOOD, {goods})
+      commit(RECEIVE_GOODS, {goods})
     }
   },
 }
