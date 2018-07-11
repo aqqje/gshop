@@ -1,136 +1,132 @@
 <template>
   <div class="shop-header">
-    <nav class="shop-nav">
+    <nav class="shop-nav" :style="{backgroundImage: `url(${info.bgImg})`}">
       <a class="back" @click="$router.back()">
         <i class="iconfont icon-arrow_left"></i>
       </a>
     </nav>
-    <div class="shop-content">
+    <div class="shop-content" @click="toggleInfoShow">
       <img class="content-image"
-           src="https://fuss10.elemecdn.com/8/40/02872ce8aefe75c16d3190e75ad61jpeg.jpeg">
+           :src="info.avatar">
       <div class="header-content">
         <h2 class="content-title">
           <span class="content-tag">
             <span class="mini-tag">品牌</span>
           </span>
-          <span class="content-name">大鸭梨</span>
+          <span class="content-name">{{info.name}}</span>
           <i class="content-icon"></i></h2>
         <div class="shop-message">
-          <span class="shop-message-detail">5</span>
-          <span class="shop-message-detail">月售 100 单</span>
+          <span class="shop-message-detail">{{info.score}}</span>
+          <span class="shop-message-detail">月售 {{info.sellCount}} 单</span>
           <span class="shop-message-detail">
-              硅谷专送
-              <span>约 30 分钟</span>
+              {{info.description}}
+              <span>约 {{info.deliveryTime}} 分钟</span>
             </span>
-          <span class="shop-message-detail">距离 1000m</span>
+          <span class="shop-message-detail">距离 {{info.distance}}</span>
         </div>
       </div>
     </div>
-    <div class="shop-header-discounts">
+    <div class="shop-header-discounts" v-if="info.supports" @click="toggleSupportsShow"  >
       <div class="discounts-left">
-        <div class="activity activity-green">
+        <div class="activity" :class="supportClass[info.supports[0].type]">
             <span class="content-tag">
-              <span class="mini-tag">首单</span>
+              <span class="mini-tag">{{info.supports[0].name}}</span>
             </span>
-          <span class="activity-content ellipsis">新用户下单立减 17 元</span>
+          <span class="activity-content ellipsis">{{info.supports[0].content}}</span>
         </div>
       </div>
       <div class="discounts-right">
-        4 个优惠
+        {{info.supports.length}} 个优惠
       </div>
     </div>
-    <div class="shop-brief-modal" style="display: none">
+    <transition name="fade">
+      <div class="shop-brief-modal" v-show="infoShow">
       <div class="brief-modal-content">
         <h2 class="content-title">
             <span class="content-tag">
               <span class="mini-tag">品牌</span>
             </span>
-          <span class="content-name">嘉禾一品（温都水城）</span>
+          <span class="content-name">{{info.name}}</span>
         </h2>
         <ul class="brief-modal-msg">
           <li>
-            <h3>3.5</h3>
+            <h3>{{info.score}}</h3>
             <p>评分</p>
           </li>
           <li>
-            <h3>90 单</h3>
+            <h3>{{info.sellCount}} 单</h3>
             <p>月售</p>
           </li>
           <li>
             <h3>硅谷专送</h3>
-            <p>约 28 分钟</p>
+            <p>约 {{info.deliveryTime}} 分钟</p>
           </li>
           <li>
-            <h3>4 元</h3>
+            <h3>{{deliveryPrice}} 元</h3>
             <p>配送费用</p>
           </li>
           <li>
-            <h3>1000m</h3>
+            <h3>{{info.distance}}</h3>
             <p>距离</p>
           </li>
         </ul>
         <h3 class="brief-modal-title"><span>公告</span></h3>
         <div class="brief-modal-notice">
-          是以粥为特色的中式营养快餐，自 2004 年 10 月 18 日创立“嘉和一品”品牌至今
+          {{info.bulletin}}
         </div>
-        <div class="mask-footer">
+        <div class="mask-footer" @click="toggleInfoShow">
           <span class="iconfont icon-close"></span>
         </div>
       </div>
       <div class="brief-modal-cover"></div>
     </div>
-    <div class="activity-sheet" style="display: none">
+    </transition>
+    <transition name="fade">
+      <div class="activity-sheet" v-show="supportsShow">
       <div class="activity-sheet-content">
         <h2 class="activity-sheet-title">优惠活动</h2>
-        <ul class="list">
-          <li class="activity-item activity-green">
+        <ul class="list" v-if="info.supports">
+          <li class="activity-item" :class="supportClass[support.type]" v-for="(support, index) in info.supports" :key="index" :support="support">
               <span class="content-tag">
-                <span class="mini-tag">首单</span>
+                <span class="mini-tag">{{support.name}}</span>
               </span>
-            <span class="activity-content">新用户下单立减 17 元(不与其它活动同享)</span>
-          </li>
-          <li class="activity-item activity-red">
-              <span class="content-tag">
-                <span class="mini-tag">满减</span>
-              </span>
-            <span class="activity-content">满 35 减 19，满 65 减 35</span>
-          </li>
-          <li class="activity-item activity-orange">
-              <span class="content-tag">
-                <span class="mini-tag">特价</span>
-              </span>
-            <span class="activity-content">【立减 19.5 元】欢乐小食餐</span>
-          </li>
-          <li class="activity-item activity-green">
-              <span class="content-tag">
-                <span class="mini-tag">首单</span>
-              </span>
-            <span class="activity-content">新用户下单立减 17 元(不与其它活动同享)</span>
-          </li>
-          <li class="activity-item activity-red">
-              <span class="content-tag">
-                <span class="mini-tag">满减</span>
-              </span>
-            <span class="activity-content">满 35 减 19，满 65 减 35</span>
-          </li>
-          <li class="activity-item activity-orange">
-              <span class="content-tag">
-                <span class="mini-tag">特价</span>
-              </span>
-            <span class="activity-content">【立减 19.5 元】欢乐小食餐</span>
+            <span class="activity-content">{{support.content}}</span>
           </li>
         </ul>
-        <div class="activity-sheet-close">
+        <div class="activity-sheet-close" @click="toggleSupportsShow">
           <span class="iconfont icon-close"></span>
         </div>
       </div>
       <div class="activity-sheet-cover"></div>
     </div>
+    </transition>
   </div>
 </template>
 
 <script>
-    export default {}
+  import {mapState} from "vuex"
+    export default {
+      data(){
+        return{
+          supportClass: ["activity-green", "activity-red", "activity-orange"], // 商家活动类型颜色样式
+          infoShow: false, //  商家信息框 | false 隐藏  true 显示
+          supportsShow: false,//  商家活动框 | false 隐藏  true 显示
+        }
+      },
+      computed:{
+        ...mapState(["info"])
+      },
+      methods:{
+        // 商家信息框显示与隐匿
+        toggleInfoShow(){
+          this.infoShow = !this.infoShow
+        },
+        // 商家活动框显示与隐匿
+        toggleSupportsShow(){
+          this.supportsShow = !this.supportsShow
+        }
+      }
+    }
 </script>
 
 
@@ -148,7 +144,6 @@
       height 40px
       padding 5px 10px
       position relative
-      background-image url("https://fuss10.elemecdn.com/f/5c/ead54394c3de198d3e6d3e9111bbfpng.png")
       &::before
         content ""
         position absolute
@@ -320,6 +315,10 @@
       z-index 52
       flex-direction column
       color #333
+      &.fade-enter-active,&.fade-leave-active
+        transition opacity .5s
+      &.fade-enter,&.fade-leave-to
+        opacity 0
       .brief-modal-cover
         position absolute
         width 100%
@@ -420,6 +419,10 @@
       width 100%
       height 100%
       z-index 99
+      &.fade-enter-active, &.fade-leave-active
+        transition opacity .5s
+      &.fade-enter, &.fade-leave-to
+        opacity 0
       .activity-sheet-content
         position absolute
         background-color #f5f5f5
