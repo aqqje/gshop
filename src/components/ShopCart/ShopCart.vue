@@ -18,31 +18,35 @@
           </div>
         </div>
       </div>
-      <div class="shopcart-list" v-show="isShow">
-        <div class="list-header">
-          <h1 class="title">购物车</h1>
-          <span class="empty">清空</span>
-        </div>
-        <div class="list-content">
-          <ul>
-            <li class="food" v-for="(food, index) in shopCart" :key="index">
-              <span class="name">{{food.name}}</span>
-              <div class="price"><span>￥{{food.price * food.count}}</span></div>
-              <div class="cartcontrol-wrapper">
-                <div class="cartcontrol">
-                  <CartControl :food="food"/>
+      <transition name="swipe">
+        <div class="shopcart-list" v-show="listShow">
+          <div class="list-header">
+            <h1 class="title">购物车</h1>
+            <span class="empty" @click="clearCart">清空</span>
+          </div>
+          <div class="list-content">
+            <ul>
+              <li class="food" v-for="(food, index) in shopCart" :key="index">
+                <span class="name">{{food.name}}</span>
+                <div class="price"><span>￥{{food.price * food.count}}</span></div>
+                <div class="cartcontrol-wrapper">
+                    <CartControl :food="food"/>
                 </div>
-              </div>
-            </li>
-          </ul>
+              </li>
+            </ul>
+          </div>
         </div>
-      </div>
+      </transition>
     </div>
-    <div class="list-mask" v-show="isShow" @click="toggleShow"></div>
+    <transition name="fade">
+      <div class="list-mask" v-show="listShow" @click="toggleShow"></div>
+    </transition>
   </div>
 </template>
 
 <script>
+  import { MessageBox } from 'mint-ui';
+  import BScroll from "better-scroll"
   import CartControl from "../CartControl/CartControl"
   import {mapState, mapGetters} from "vuex"
     export default {
@@ -58,6 +62,28 @@
         payClass(){
           const {totalPrice} = this
           return totalPrice >= this.info.minPrice ? "enough" : "not-enough"
+        },
+        listShow(){
+          // 如总数为0不直接显示
+          if(this.totalCount === 0){
+            this.isShow = false
+            return false
+          }
+          if(this.isShow){
+            // 当前 isShow = true 时创建 BScroll 实例
+            this.$nextTick(() => {
+              if(!this.scroll){
+                this.scroll = new BScroll(".list-content",{
+                  click: true
+                })
+              }else{
+                // 刷新 scroll
+                this.scroll.refresh()
+              }
+
+            })
+          }
+          return this.isShow
         },
         // 结算文本变化
         payText(){
@@ -75,7 +101,15 @@
       },
       methods:{
         toggleShow(){
-          this.isShow = !this.isShow
+          // totalCount 有值时才行进行切换
+          if(this.totalCount){
+            this.isShow = !this.isShow
+          }
+        },
+        clearCart(){
+          MessageBox.confirm('您确定清空购物车吗?').then(action => {
+            this.$store.dispatch("clearCart")
+          }, () => {});
         }
       },
       components:{

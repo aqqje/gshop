@@ -13,6 +13,7 @@ import {
   RECEIVE_INFO,
   INCREMENT_FOOD_COUNT,
   DECREMENT_FOOD_COUNT,
+  CLEAR_CART_LIST,
 } from "./Mutations-Types"
 export default {
   [RECEIVE_ADDRESS](state,{address}){
@@ -55,5 +56,11 @@ export default {
         state.shopCart.splice(state.shopCart.indexOf(food), 1)
       }
     }
+  },
+  [CLEAR_CART_LIST](state){
+    // 初始化 food.count = 0
+    state.shopCart.forEach(food => food.count = 0)
+    // 清空 shopCart
+    state.shopCart = []
   }
 }
