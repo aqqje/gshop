@@ -2,7 +2,7 @@
   <div>
     <div class="shopcart">
       <div class="content">
-        <div class="content-left">
+        <div class="content-left" @click="toggleShow">
           <div class="logo-wrapper">
             <div class="logo" :class="{highlight: totalCount}">
               <i class="iconfont icon-shopping_cart" :class="{highlight: totalCount}"></i>
@@ -25,14 +25,12 @@
         </div>
         <div class="list-content">
           <ul>
-            <li class="food">
-              <span class="name">红枣山药糙米粥</span>
-              <div class="price"><span>￥10</span></div>
+            <li class="food" v-for="(food, index) in shopCart" :key="index">
+              <span class="name">{{food.name}}</span>
+              <div class="price"><span>￥{{food.price * food.count}}</span></div>
               <div class="cartcontrol-wrapper">
                 <div class="cartcontrol">
-                  <div class="iconfont icon-remove_circle_outline"></div>
-                  <div class="cart-count">1</div>
-                  <div class="iconfont icon-add_circle"></div>
+                  <CartControl :food="food"/>
                 </div>
               </div>
             </li>
@@ -40,15 +38,18 @@
         </div>
       </div>
     </div>
-    <div class="list-mask" style="display: none;"></div>
+    <div class="list-mask" v-show="isShow" @click="toggleShow"></div>
   </div>
 </template>
 
 <script>
+  import CartControl from "../CartControl/CartControl"
   import {mapState, mapGetters} from "vuex"
     export default {
       data(){
-        isShow: false
+        return {
+          isShow: false
+        }
       },
       computed:{
         ...mapState(["shopCart", "info"]),
@@ -62,7 +63,7 @@
         payText(){
           const {totalPrice} = this
           const {minPrice} = this.info
-          if(totalPrice){
+          if(!totalPrice){
             return `￥${minPrice}元起送`
           }
           if(totalPrice < minPrice){
@@ -71,6 +72,14 @@
             return `结算`
           }
         },
+      },
+      methods:{
+        toggleShow(){
+          this.isShow = !this.isShow
+        }
+      },
+      components:{
+        CartControl
       }
     }
 </script>
