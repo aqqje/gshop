@@ -14,7 +14,7 @@
         </ul>
       </div>
       <div class="foods-wrapper" ref="foodsWrapper">
-        <ul>
+        <ul ref="foodUl">
           <li class="food-list-hook" v-for="(good, index) in goods" :key="index">
             <h1 class="title">{{good.name}}</h1>
             <ul>
@@ -56,20 +56,31 @@
           scrollY: 0 // 滑动实时的Y坐标
         }
       },
-      mounted(){
-        this.$store.dispatch('getShopGoods', this.$nextTick(() => {
-          this.initScroll()
-        }))
+      mounted() {
+        this.$store.dispatch('getShopGoods', () => {// 数据更新后执行
+          this.$nextTick(() => { // 列表数据更新显示后执行
+            this._initScroll()
+            this._initTops()
+          })
+        })
+
       },
       computed:{
         ...mapState(["goods"]),
         // 计算得到时当前分类的下标
         currentIndex(){
+          // 得到条件数据
+          const {tops, scrollY} = this
+          const index = tops.findIndex((top, index) => {
+            return scrollY >= top && scrollY < tops[index + 1]
+          })
 
+          return index
         }
       },
       methods:{
-        initScroll(){
+        // 初始化滚动
+        _initScroll(){
           new BScroll(this.$refs.menuWrapper, {
 
           })
@@ -77,8 +88,27 @@
             probeType: 2
           })
           foodsScroll.on('scroll', ({x,y}) => {
-            console.log(x,y)
+            // console.log(Math.abs(y))
+            this.scrollY = Math.abs(y)
           })
+
+        },
+        // 初始化tops
+
+        _initTops(){
+          // 1.初始化 tops[]
+          const tops = []
+          let top = 0
+          tops.push(top)
+          // 2.收集所有分类的li
+          const lis = this.$refs.foodUl.getElementsByClassName("food-list-hook")
+          Array.prototype.slice.call(lis).forEach(li => {
+            top += li.clientHeight
+            tops.push(top)
+          })
+          // 3.更新数据
+          this.tops = tops
+          console.log(tops)
         }
       }
     }
