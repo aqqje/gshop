@@ -18,7 +18,7 @@
           </div>
         </div>
       </div>
-      <div class="shopcart-list" style="display: none;">
+      <div class="shopcart-list" v-show="isShow">
         <div class="list-header">
           <h1 class="title">购物车</h1>
           <span class="empty">清空</span>
@@ -47,6 +47,9 @@
 <script>
   import {mapState, mapGetters} from "vuex"
     export default {
+      data(){
+        isShow: false
+      },
       computed:{
         ...mapState(["shopCart", "info"]),
         ...mapGetters(["totalCount", "totalPrice"]),
