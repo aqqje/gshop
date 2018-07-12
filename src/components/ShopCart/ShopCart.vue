@@ -105,6 +105,7 @@
           if(this.totalCount){
             this.isShow = !this.isShow
           }
+
         },
         clearCart(){
           MessageBox.confirm('您确定清空购物车吗?').then(action => {
