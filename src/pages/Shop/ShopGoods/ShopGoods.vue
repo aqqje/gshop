@@ -121,7 +121,7 @@
           })
           // 3.更新数据
           this.tops = tops
-          console.log(tops)
+          // console.log(tops)
         },
         // 左侧列表选择监听
         scrollMenu(index){
