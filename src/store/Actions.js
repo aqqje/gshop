@@ -9,9 +9,11 @@ import {
   RECEIVE_SHOPS,
   RECEIVE_TYPES,
   RECEIVE_USER_INFO,
-  RESET_USER_INFO
-
+  RESET_USER_INFO,
+  INCREMENT_FOOD_COUNT,
+  DECREMENT_FOOD_COUNT,
 } from "./Mutations-Types"
+
 import {
   reqFoodTypes,
   reqAddress,
@@ -70,8 +72,7 @@ export default {
     if(result.code === 0){
       commit(RESET_USER_INFO)
     }
-  }
-  ,
+  },
   // 异步获取商家信息
   async getShopInfo({commit}) {
     const result = await reqShopInfo()
@@ -85,7 +86,7 @@ export default {
     const result = await reqShopRatings()
     if(result.code===0) {
       const ratings = result.data
-      commit(RECEIVE_RATINGS, {ratings})
+      commit(RECEIVE_RATING, {ratings})
     }
   },
 // 异步获取商家商品列表
@@ -98,4 +99,13 @@ export default {
       callBack()
     }
   },
+
+  // 同步更新food.count的值
+  updataFoodCount({commit},{isAdd, food}){
+    if(isAdd){
+      commit(INCREMENT_FOOD_COUNT,{food})
+    }else{
+      commit(DECREMENT_FOOD_COUNT, {food})
+    }
+  }
 }

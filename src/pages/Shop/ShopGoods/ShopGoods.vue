@@ -4,7 +4,8 @@
       <div class="menu-wrapper" ref="menuWrapper">
         <ul>
           <!--current-->
-          <li class="menu-item" v-for="(good, index) in goods" :key="index" :class="{current: index===currentIndex}">
+          <li class="menu-item" v-for="(good, index) in goods" :key="index"
+              :class="{current: index===currentIndex}" @click="scrollMenu(index)">
             <span class="text bottom-border-1px">
             <img class="icon"
                  :src="good.icon" v-if="good.icon">
@@ -34,7 +35,7 @@
                     <span class="old" v-if="food.oldPrice">￥9</span>
                   </div>
                   <div class="cartcontrol-wrapper">
-                    CartControl
+                    <CartControl :food="food" />
                   </div>
                 </div>
               </li>
@@ -47,6 +48,7 @@
 </template>
 
 <script>
+  import CartControl from "../../../components/CartControl/CartControl"
   import {mapState} from "vuex"
   import BScroll from 'better-scroll'
     export default {
@@ -82,19 +84,24 @@
         // 初始化滚动
         _initScroll(){
           new BScroll(this.$refs.menuWrapper, {
-
+            click: true
           })
-          const foodsScroll = new BScroll(this.$refs.foodsWrapper, {
-            probeType: 2
+          this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {
+            probeType: 2,
+            click: true
           })
-          foodsScroll.on('scroll', ({x,y}) => {
+          // 右侧列表的滚动监听
+          this.foodsScroll.on('scroll', ({x,y}) => {
             // console.log(Math.abs(y))
             this.scrollY = Math.abs(y)
           })
-
+          // 右侧列表的滚动停止监听
+          this.foodsScroll.on('scrollEnd', ({x,y}) => {
+            // console.log(Math.abs(y))
+            this.scrollY = Math.abs(y)
+          })
         },
         // 初始化tops
-
         _initTops(){
           // 1.初始化 tops[]
           const tops = []
@@ -109,7 +116,16 @@
           // 3.更新数据
           this.tops = tops
           console.log(tops)
+        },
+        // 左侧列表选择监听
+        scrollMenu(index){
+          const scrollY = this.tops[index]
+          this.scrollY = scrollY
+          this.foodsScroll.scrollTo(0, -scrollY, 300)
         }
+      },
+      components:{
+        CartControl
       }
     }
 </script>

@@ -1,6 +1,7 @@
 /*
 * 基于 State 的数据操作
 * */
+import Vue from "vue"
 import {
   RECEIVE_ADDRESS,
   RECEIVE_SHOPS,
@@ -9,7 +10,9 @@ import {
   RESET_USER_INFO,
   RECEIVE_GOODS,
   RECEIVE_RATING,
-  RECEIVE_INFO
+  RECEIVE_INFO,
+  INCREMENT_FOOD_COUNT,
+  DECREMENT_FOOD_COUNT,
 } from "./Mutations-Types"
 export default {
   [RECEIVE_ADDRESS](state,{address}){
@@ -36,4 +39,16 @@ export default {
   [RECEIVE_GOODS](state, {goods}) {
     state.goods = goods
   },
+  [INCREMENT_FOOD_COUNT](state,{food}){
+    if(!food.count){
+      Vue.set(food, "count", 1)
+    }else{
+      food.count++
+    }
+  },
+  [DECREMENT_FOOD_COUNT](state, {food}){
+    if(food.count){
+      food.count--
+    }
+  }
 }
