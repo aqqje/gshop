@@ -44,9 +44,10 @@
           </li>
         </ul>
       </div>
+      <ShopCart></ShopCart>
     </div>
     <Food :food="food" ref="food"/>
-    <ShopCart></ShopCart>
+
   </div>
 </template>
 
