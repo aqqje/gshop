@@ -16,10 +16,11 @@
       </div>
       <div class="foods-wrapper" ref="foodsWrapper">
         <ul ref="foodUl">
-          <li class="food-list-hook" v-for="(good, index) in goods" :key="index">
+          <li class="food-list-hook" v-for="(good, index) in goods"
+              :key="index">
             <h1 class="title">{{good.name}}</h1>
             <ul>
-              <li class="food-item bottom-border-1px" v-for="(food, index) in good.foods" :key="index">
+              <li class="food-item bottom-border-1px" @click="showFood(food)" v-for="(food, index) in good.foods" :key="index">
                 <div class="icon">
                   <img width="57" height="57"
                        :src="food.icon">
@@ -44,11 +45,13 @@
         </ul>
       </div>
     </div>
+    <Food :food="food" ref="food"/>
     <ShopCart></ShopCart>
   </div>
 </template>
 
 <script>
+  import Food from "../../../components/Food/Food"
   import CartControl from "../../../components/CartControl/CartControl"
   import {mapState} from "vuex"
   import BScroll from 'better-scroll'
@@ -58,7 +61,7 @@
         return {
           tops: [], // 食品列表的标题上的上边界值
           scrollY: 0, // 滑动实时的Y坐标
-          food: {} // food对象
+          food: {} // 收集food对象
         }
       },
       mounted() {
@@ -125,11 +128,17 @@
           const scrollY = this.tops[index]
           this.scrollY = scrollY
           this.foodsScroll.scrollTo(0, -scrollY, 300)
+        },
+        // 调用子组件 Food 的 toggleFood 方法, 实现显示与隐藏 Food 组件
+        showFood(food){
+          this.food = food
+          this.$refs.food.toggleFood()
         }
       },
       components:{
         ShopCart,
         CartControl,
+        Food,
       }
     }
 </script>
