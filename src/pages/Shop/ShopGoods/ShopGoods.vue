@@ -4,7 +4,7 @@
       <div class="menu-wrapper" ref="menuWrapper">
         <ul>
           <!--current-->
-          <li class="menu-item" v-for="(good, index) in goods" :key="index">
+          <li class="menu-item" v-for="(good, index) in goods" :key="index" :class="{current: index===currentIndex}">
             <span class="text bottom-border-1px">
             <img class="icon"
                  :src="good.icon" v-if="good.icon">
@@ -48,12 +48,38 @@
 
 <script>
   import {mapState} from "vuex"
+  import BScroll from 'better-scroll'
     export default {
+      data(){
+        return {
+          tops: [], // 食品列表的标题上的上边界值
+          scrollY: 0 // 滑动实时的Y坐标
+        }
+      },
       mounted(){
-        this.$store.dispatch("getShopGoods")
+        this.$store.dispatch('getShopGoods', this.$nextTick(() => {
+          this.initScroll()
+        }))
       },
       computed:{
-        ...mapState(["goods"])
+        ...mapState(["goods"]),
+        // 计算得到时当前分类的下标
+        currentIndex(){
+
+        }
+      },
+      methods:{
+        initScroll(){
+          new BScroll(this.$refs.menuWrapper, {
+
+          })
+          const foodsScroll = new BScroll(this.$refs.foodsWrapper, {
+            probeType: 2
+          })
+          foodsScroll.on('scroll', ({x,y}) => {
+            console.log(x,y)
+          })
+        }
       }
     }
 </script>
