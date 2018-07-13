@@ -6,10 +6,14 @@ import router from './router'
 import store from "./store"
 import {Button} from 'mint-ui'
 import "./mock/mockServer"
-
+import VueLazyload from "vue-lazyload"
+import loading from "./common/images/loading.gif"
 // 注册全局组件
 Vue.component(Button.name, Button) // <mt-botton>
 Vue.config.productionTip = false
+Vue.use(VueLazyload,{ //  内部自定义一个指定命 Lazy
+  loading
+})
 
 /* eslint-disable no-new */
 new Vue({
