@@ -8,6 +8,7 @@ import {Button} from 'mint-ui'
 import "./mock/mockServer"
 import VueLazyload from "vue-lazyload"
 import loading from "./common/images/loading.gif"
+import "./filters"
 // 注册全局组件
 Vue.component(Button.name, Button) // <mt-botton>
 Vue.config.productionTip = false
