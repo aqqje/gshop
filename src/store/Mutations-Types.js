@@ -16,4 +16,6 @@ export const DECREMENT_FOOD_COUNT = 'decrement_food_count' // food.count - 1
 
 export const CLEAR_CART_LIST = "clear_cart_list" // 清空购物车列表
 
+export const RECEIVE_SEARCH_SHOPS = "receive_search_shops" // 接收地址
+
 

@@ -12,7 +12,8 @@ import {
   RESET_USER_INFO,
   INCREMENT_FOOD_COUNT,
   DECREMENT_FOOD_COUNT,
-  CLEAR_CART_LIST
+  CLEAR_CART_LIST,
+  RECEIVE_SEARCH_SHOPS
 } from "./Mutations-Types"
 
 import {
@@ -23,7 +24,8 @@ import {
   reqUserInfo,
   reqShopInfo,
   reqShopRatings,
-  reqShopGoods
+  reqShopGoods,
+  reqSearchShops
 } from "../api"
 export default {
   // 异步获取地址
@@ -114,6 +116,16 @@ export default {
   // 清空购物车
   clearCart({commit}){
     commit(CLEAR_CART_LIST)
+  },
+  // 异步请求搜索数据
+  async searchShops({commit, state}, keyword, callBack){
+    const geohash = state.latitude + "," + state.longitude
+    const result = await reqSearchShops(geohash, keyword)
+    if(result.code===0){
+      const searchShops = result.data
+      commit(RECEIVE_SEARCH_SHOPS, {searchShops})
+      callBack && callBack()
+    }
   }
 
 }

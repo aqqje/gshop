@@ -12,4 +12,5 @@ export default {
   ratings: [], // 商家评价列表
   info: {}, // 商家信息
   shopCart:[], // 购物车信息
+  searchShops: [], // 收集搜索的商家
 }
