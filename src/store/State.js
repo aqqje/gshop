@@ -9,7 +9,7 @@ export default {
   shops: [], // 商家列表数组
   userInfo: {}, // 用户信息
   goods: [], // 商品列表
-  rating: [], // 商家评价列表
+  ratings: [], // 商家评价列表
   info: {}, // 商家信息
   shopCart:[], // 购物车信息
 }
