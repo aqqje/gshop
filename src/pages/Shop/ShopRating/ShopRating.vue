@@ -27,26 +27,26 @@
       <div class="split"></div>
       <div class="ratingselect">
         <div class="rating-type border-1px">
-          <span class="block positive">
-          全部<span class="count">30</span>
+          <span class="block positive" :class="{active: rateType === 2}" @click="seletType(2)">
+          全部<span class="count" >{{ratings.length}}</span>
           </span>
-          <span class="block positive">
+          <span class="block positive" :class="{active: rateType === 0}" @click="seletType(0)">
             满意
-            <span class="count">28</span>
+            <span class="count" >{{positionSize}}</span>
           </span>
-          <span class="block negative">
+          <span class="block negative" :class="{active: rateType === 1}" @click="seletType(1)">
             不满意
-            <span class="count">2</span>
+            <span class="count">{{ratings.length - positionSize}}</span>
           </span>
         </div>
-        <div class="switch on">
+        <div class="switch" :class="{on: onlyShowText}" @click="toggleOnlyShowText">
           <span class="iconfont icon-check_circle"></span>
           <span class="text">只看有内容的评价</span>
         </div>
       </div>
       <div class="rating-wrapper">
         <ul>
-          <li class="rating-item" v-for="(rating, index) in ratings" :key="index">
+          <li class="rating-item" v-for="(rating, index) in filterRating" :key="index">
             <div class="avatar">
               <img width="28" height="28"
                    :src="rating.avatar">
@@ -72,18 +72,58 @@
 </template>
 
 <script>
+  import BScroll from "better-scroll"
   import Star from "../../../components/Star/Star"
-  import {mapState, mapActions} from "vuex"
+  import {mapState, mapGetters} from "vuex"
     export default {
+      data(){
+        return{
+          onlyShowText: true, // 只显示有评论
+          rateType: 2 // 0.满意 1.不满意 2.全部
+        }
+      },
+      methods:{
+        toggleOnlyShowText(){
+          this.onlyShowText = !this.onlyShowText
+        },
+        seletType(rateType){
+          this.rateType = rateType
+        }
+      },
       components:{
         Star
       },
       computed:{
-        ...mapState(["info", "ratings"])
+        ...mapState(["info", "ratings"]),
+        ...mapGetters(["positionSize"]),
+        filterRating(){
+          // 得到相当的条件
+          const {onlyShowText, rateType, ratings} = this
+          return this.ratings.filter(rating => {
+            const {text} = rating
+            /*
+              条件1:
+                rateType: 0/1/2
+                rateType: 0/1
+                rateType === 2 || rateType === rating.rateType
+              条件2:
+                text: 有值|无值
+                onlyShowText: true|false
+                onlyShowText || text.length > 0
+            */
+            return (rateType === 2 || rateType === rating.rateType) && (onlyShowText || text.length > 0)
+          })
+        }
       },
       mounted(){
         // 异步获取评论信息
-        this.$store.dispatch("getShopRatings")
+        this.$store.dispatch("getShopRatings", () => {
+          this.$nextTick(() => {
+            new BScroll(".ratings", {
+              click: true
+            })
+          })
+        })
       }
     }
 </script>

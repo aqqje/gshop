@@ -83,11 +83,13 @@ export default {
     }
   },
 // 异步获取商家评价列表
-  async getShopRatings({commit}) {
+  async getShopRatings({commit}, callBack) {
     const result = await reqShopRatings()
     if(result.code===0) {
       const ratings = result.data
       commit(RECEIVE_RATING, {ratings})
+      // 数据更新了通知下，组件
+      callBack && callBack()
     }
   },
 // 异步获取商家商品列表
@@ -97,7 +99,7 @@ export default {
       const goods = result.data
       commit(RECEIVE_GOODS, {goods})
       // 数据更新了通知下，组件
-      callBack()
+      callBack && callBack()
     }
   },
 
