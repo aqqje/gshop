@@ -1,8 +1,9 @@
 import Vue from "vue"
-import Moment from "moment"
-
+// import Moment from "moment"
+import format from "date-fns/format"
 // 自定义过滤器
 
 Vue.filter("date-format",(value, formatStr="YYYY-MM-DD HH:mm:ss") => {
-  return Moment(value).format(formatStr)
+  // return Moment(value).format(formatStr)
+  return format(value, formatStr)
 })
