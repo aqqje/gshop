@@ -3,11 +3,18 @@
 * */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Msite from '../pages/Msite/Msite'
+/*import Msite from '../pages/Msite/Msite'
 import Order from '../pages/Order/Order'
 import Profile from '../pages/Profile/Profile'
 import Search from '../pages/Search/Search'
-import Login from '../pages/Login/Login'
+import Login from '../pages/Login/Login'*/
+
+const Msite = () => import("../pages/Msite/Msite")
+const Order = () => import("../pages/Order/Order")
+const Profile = () => import("../pages/Profile/Profile")
+const Search = () => import("../pages/Search/Search")
+const Login = () => import("../pages/Login/Login")
+
 import Shop from '../pages/Shop/Shop'
 import ShopGoods from '../pages/Shop/ShopGoods/ShopGoods'
 import ShopRating from '../pages/Shop/ShopRating/ShopRating'
